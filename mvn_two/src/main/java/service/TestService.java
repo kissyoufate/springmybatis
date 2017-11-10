@@ -78,4 +78,19 @@ public class TestService {
         }
         return jsonstr;
     }
+
+    public List getAllUserInJsp() throws IOException {
+        SqlSessionFactory sqlSessionFactory = SqlSessionFactoryTool.getSqlSessionFactory();
+        SqlSession openSession = sqlSessionFactory.openSession();
+
+        List userList;
+        try {
+            UserMapper mapper = openSession.getMapper(UserMapper.class);
+            userList = mapper.getAllUser();
+        } finally {
+            openSession.close();
+        }
+
+        return userList;
+    }
 }

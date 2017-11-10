@@ -2,7 +2,8 @@
 <html>
 <body>
 <h2>Hello World!jjjjjj</h2>
-<a href="/test/getAllUser">获取所有用户</a>
+<a href="/test/getAllUser">获取所有用户json</a>
+<a href="/test/getAllUserJsp">获得所有用户展示在页面上</a>
 <a href="#">添加一个用户</a>
 <form action="/test/addUser" method="post">
     用户名<input type="text" name="name"><br>

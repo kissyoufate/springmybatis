@@ -57,4 +57,12 @@ public class TestController {
         TestService ts = new TestService();
         return ts.addUser(name,password);
     }
+
+    @RequestMapping(value = "/getAllUserJsp")
+    public String getAllUserInJsp(Model model) throws IOException {
+        TestService testService = new TestService();
+        List list = testService.getAllUserInJsp();
+        model.addAttribute("lists",list);
+        return "test";
+    }
 }
