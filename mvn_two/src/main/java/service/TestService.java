@@ -40,6 +40,8 @@ public class TestService {
             openSession.close();
         }
 
+        System.out.println(jsonstr);
+
         return jsonstr;
     }
 
