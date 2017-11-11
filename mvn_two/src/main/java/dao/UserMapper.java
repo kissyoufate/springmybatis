@@ -1,12 +1,14 @@
 package dao;
 
 import model.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by wudi on 2017/11/10.
  */
+@Service
 public interface UserMapper {
 
     /**

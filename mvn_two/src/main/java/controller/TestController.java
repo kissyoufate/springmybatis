@@ -17,6 +17,7 @@ import service.TestService;
 import tool.JsonReverTool;
 import tool.SqlSessionFactoryTool;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +30,9 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/test")
 public class TestController {
+
+    @Resource
+    private  TestService testService;
 
     @RequestMapping(value = "/one")
     public String gotoSomePage(Model model){
@@ -47,20 +51,17 @@ public class TestController {
     @RequestMapping(value = "/getAllUser")
     @ResponseBody
     public String getAllUser() throws IOException {
-        TestService ts = new TestService();
-        return ts.getAllUsers();
+        return testService.getAllUsers();
     }
 
     @RequestMapping(value = "/addUser")
     @ResponseBody
     public String addUser(@RequestParam() String name,@RequestParam() String password) throws IOException {
-        TestService ts = new TestService();
-        return ts.addUser(name,password);
+        return testService.addUser(name,password);
     }
 
     @RequestMapping(value = "/getAllUserJsp")
     public String getAllUserInJsp(Model model) throws IOException {
-        TestService testService = new TestService();
         List list = testService.getAllUserInJsp();
         model.addAttribute("lists",list);
         return "test";

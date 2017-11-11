@@ -5,9 +5,12 @@ import dao.UserMapper;
 import model.User;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tool.JsonReverTool;
 import tool.SqlSessionFactoryTool;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,29 +18,24 @@ import java.util.List;
 /**
  * Created by wudi on 2017/11/10.
  */
+@Service
 public class TestService {
+
+    @Resource
+    private UserMapper userMapper;
 
     public String getAllUsers() throws IOException {
 
         List<User> userList = new ArrayList<User>();
 
-        SqlSessionFactory sqlSessionFactory = SqlSessionFactoryTool.getSqlSessionFactory();
-        SqlSession openSession = sqlSessionFactory.openSession();
+        String jsonstr = null;
 
-        String jsonstr;
-        try {
-            UserMapper mapper = openSession.getMapper(UserMapper.class);
-            List lists = mapper.getAllUser();
+        List lists = userMapper.getAllUser();
 
-            jsonstr = null;
-
-            if (lists != null) {
-                jsonstr = JsonReverTool.reverObjectToJsonStr(lists, 1, null);
-            } else {
-                jsonstr = JsonReverTool.reverObjectToJsonStr(null, 0, "用户获取失败");
-            }
-        } finally {
-            openSession.close();
+        if (lists != null) {
+            jsonstr = JsonReverTool.reverObjectToJsonStr(lists, 1, null);
+        } else {
+            jsonstr = JsonReverTool.reverObjectToJsonStr(null, 0, "用户获取失败");
         }
 
         System.out.println(jsonstr);
@@ -56,41 +54,21 @@ public class TestService {
             jsonstr = JsonReverTool.reverObjectToJsonStr(null, 0, "密码不能为空");
         }
 
+        User u = new User(name, password);
 
-        SqlSessionFactory sqlSessionFactory = SqlSessionFactoryTool.getSqlSessionFactory();
-        SqlSession sqlSession = sqlSessionFactory.openSession();
+        int i = userMapper.addUser(u);
 
-        try {
-            User u = new User(name, password);
-
-            int i = sqlSession.getMapper(UserMapper.class).addUser(u);
-
-            if (i > 0) {
-                //提交操作
-                sqlSession.commit();
-                u.setId(i);
-                jsonstr = JsonReverTool.reverObjectToJsonStr(u, 1, null);
-            } else {
-                jsonstr = JsonReverTool.reverObjectToJsonStr(null, 0, "用户添加失败");
-            }
-        } finally {
-            sqlSession.close();
+        if (i > 0) {
+            //提交操作
+            u.setId(i);
+            jsonstr = JsonReverTool.reverObjectToJsonStr(u, 1, null);
+        } else {
+            jsonstr = JsonReverTool.reverObjectToJsonStr(null, 0, "用户添加失败");
         }
         return jsonstr;
     }
 
     public List getAllUserInJsp() throws IOException {
-        SqlSessionFactory sqlSessionFactory = SqlSessionFactoryTool.getSqlSessionFactory();
-        SqlSession openSession = sqlSessionFactory.openSession();
-
-        List userList;
-        try {
-            UserMapper mapper = openSession.getMapper(UserMapper.class);
-            userList = mapper.getAllUser();
-        } finally {
-            openSession.close();
-        }
-
-        return userList;
+        return userMapper.getAllUser();
     }
 }

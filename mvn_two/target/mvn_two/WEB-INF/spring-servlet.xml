@@ -19,6 +19,16 @@
     <mvc:resources location="/js/*" mapping="/js/**" />
     <mvc:resources location="/images/*" mapping="/images/**" />
 
+    <!--避免IE执行AJAX时，返回JSON出现下载文件 -->
+    <bean id="mappingJacksonHttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
     <!-- 添加注解驱动 顺便解决返回数据的乱码问题 -->
     <mvc:annotation-driven>
         <mvc:message-converters>
@@ -31,12 +41,18 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+
+    <!-- 添加注解驱动 -->
+    <mvc:annotation-driven />
+    <mvc:default-servlet-handler/>
+
     <!-- 默认扫描的包路径 -->
     <context:component-scan base-package="controller" />
 
     <!-- mvc:view-controller可以在不需要Controller处理request的情况，转向到设置的View -->
     <!-- 像下面这样设置，如果请求为/，则不通过controller，而直接解析为/index.jsp -->
     <mvc:view-controller path="/" view-name="index" />
+
     <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
         <!-- 配置jsp路径前缀 -->
@@ -44,5 +60,15 @@
         <!-- 配置URl后缀 -->
         <property name="suffix" value=".jsp"></property>
     </bean>
+
+    <!-- SpringMVC上传文件时，需要配置MultipartResolver处理器-->
+    <!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
+        <!--&lt;!&ndash; 默认编码 &ndash;&gt;-->
+        <!--<property name="defaultEncoding" value="utf-8" />-->
+        <!--&lt;!&ndash; 文件大小最大值 &ndash;&gt;-->
+        <!--<property name="maxUploadSize" value="10485760000" />-->
+        <!--&lt;!&ndash; 内存中的最大值 &ndash;&gt;-->
+        <!--<property name="maxInMemorySize" value="40960" />-->
+    <!--</bean>-->
 
 </beans>
